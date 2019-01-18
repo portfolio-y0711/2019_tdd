@@ -3,28 +3,35 @@ package com.goos.auctionSniper;
 
 public class ApplicationRunner {
 
+    private final String XMPP_HOSTNAME = "localhost";
+    private final String SNIPER_PASSWORD = "sniper";
+    private final String SNIPER_ID = "sniper";
+    private final String STATUS_JOIN = "Sniper Status: Joined";
+    private final String STATUS_LOST = "Sniper Status: Logged Out";
     private AuctionSniperDriver driver;
 
     public void startBiddingIn(FakeAuctionServer auction) {
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {
-                Main.main("localhost", "sniper", "sniper", auction.getItemId());
+                Main.main(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, auction.getItemId());
             }
         };
         thread.setDaemon(true);
         thread.start();
 
         driver = new AuctionSniperDriver(1000);
-        driver.showSniperStatus("Sniper Status: Joined");
+        driver.showSniperStatus(STATUS_JOIN);
     }
 
 
     public void showSniperHasLostAuction() {
-        driver.showSniperStatus("Sniper Status: Logged Out");
+        driver.showSniperStatus(STATUS_LOST);
     }
 
     public void stop() {
-        driver.dispose();
+        if (driver != null) {
+            driver.dispose();
+        }
     }
 }
