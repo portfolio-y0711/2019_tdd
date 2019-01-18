@@ -1,14 +1,21 @@
 package com.goos.auctionSniper;
 
-import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.ChatManagerListener;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.packet.Message;
+
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.TimeUnit;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.notNullValue;
 
 public class FakeAuctionServer {
     private final String itemId;
     private final XMPPConnection connection;
     private Chat currentChat;
+
+    private final SingleMessageListener messageListner = new SingleMessageListener();
 
     public FakeAuctionServer(String itemId) {
         this.itemId = itemId;
@@ -23,6 +30,7 @@ public class FakeAuctionServer {
                     @Override
                     public void chatCreated(Chat chat, boolean createdLocally) {
                         currentChat = chat;
+                        chat.addMessageListener(messageListner);
                     }
                 }
         );
@@ -32,12 +40,21 @@ public class FakeAuctionServer {
         return itemId;
     }
 
-    public voiㅏd hasReceivedJoinRequestFromSniper() {
+    public void hasReceivedJoinRequestFromSniper() {
     }
 
     public void announceClosed() {
     }
 
     public void stop() {
+    }
+
+    public class SingleMessageListener implements MessageListener {
+        ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
+
+        @Override
+        public void processMessage(Chat chat, Message message) {
+            messages.add(message);
+        }
     }
 }
