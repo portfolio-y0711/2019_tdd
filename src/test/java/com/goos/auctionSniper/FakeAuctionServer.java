@@ -4,7 +4,6 @@ import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -37,7 +36,7 @@ public class FakeAuctionServer {
         );
     }
 
-    public Object getItemId() {
+    public String getItemId() {
         return itemId;
     }
 
