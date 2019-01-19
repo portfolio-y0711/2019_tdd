@@ -16,6 +16,13 @@ public class Main {
                 mainWindow.setName("Auction Sniper Standalone");
                 mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 mainWindow.setVisible(true);
+
+                JLabel statusLabel = new JLabel("Sniper Status: Joined");
+                statusLabel.setName("Label-SniperStatus");
+                statusLabel.setBorder(new LineBorder(Color.BLACK));
+
+                mainWindow.add(statusLabel);
+                mainWindow.pack();
             }
         });
     }
