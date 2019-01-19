@@ -23,12 +23,17 @@ public class Main {
             mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             mainWindow.setVisible(true);
 
-            JLabel statusLabel = new JLabel("Sniper Status: Joined");
-            statusLabel.setName("Label-SniperStatus");
-            statusLabel.setBorder(new LineBorder(Color.BLACK));
+            JLabel statusLabel = createLabel("Sniper Status: Joined");
 
             mainWindow.add(statusLabel);
             mainWindow.pack();
+        }
+
+        private JLabel createLabel(String initialText) {
+            JLabel statusLabel = new JLabel(initialText);
+            statusLabel.setName("Label-SniperStatus");
+            statusLabel.setBorder(new LineBorder(Color.BLACK));
+            return statusLabel;
         }
     }
 }
