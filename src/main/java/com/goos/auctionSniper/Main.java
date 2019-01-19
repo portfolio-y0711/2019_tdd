@@ -12,18 +12,23 @@ public class Main {
         SwingUtilities.invokeAndWait(new Runnable() {
             @Override
             public void run() {
-                JFrame mainWindow = new JFrame("Auction Sniper");
-                mainWindow.setName("Auction Sniper Standalone");
-                mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                mainWindow.setVisible(true);
-
-                JLabel statusLabel = new JLabel("Sniper Status: Joined");
-                statusLabel.setName("Label-SniperStatus");
-                statusLabel.setBorder(new LineBorder(Color.BLACK));
-
-                mainWindow.add(statusLabel);
-                mainWindow.pack();
+                MainWindow ui = new MainWindow();
             }
         });
+    }
+    public static class MainWindow extends JFrame {
+        MainWindow(){
+            JFrame mainWindow = new JFrame("Auction Sniper");
+            mainWindow.setName("Auction Sniper Standalone");
+            mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            mainWindow.setVisible(true);
+
+            JLabel statusLabel = new JLabel("Sniper Status: Joined");
+            statusLabel.setName("Label-SniperStatus");
+            statusLabel.setBorder(new LineBorder(Color.BLACK));
+
+            mainWindow.add(statusLabel);
+            mainWindow.pack();
+        }
     }
 }
