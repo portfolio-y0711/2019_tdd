@@ -19,7 +19,7 @@ public class FakeAuctionServer {
 
     public FakeAuctionServer(String itemId) {
         this.itemId = itemId;
-        this.connection = new XMPPConnection("localhost");
+        this.connection = new XMPPConnection("sanalucet.duckdns.org");
     }
 
     public void startSellingItem() throws XMPPException {

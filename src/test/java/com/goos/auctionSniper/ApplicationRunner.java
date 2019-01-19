@@ -3,7 +3,7 @@ package com.goos.auctionSniper;
 
 public class ApplicationRunner {
 
-    private final String XMPP_HOSTNAME = "localhost";
+    private final String XMPP_HOSTNAME = "sanalucet.duckdns.org";
     private final String SNIPER_PASSWORD = "sniper";
     private final String SNIPER_ID = "sniper";
     private final String STATUS_JOIN = "Sniper Status: Joined";
