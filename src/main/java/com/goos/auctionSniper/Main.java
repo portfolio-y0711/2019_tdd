@@ -34,6 +34,12 @@ public class Main {
                 new MessageListener() {
                     @Override
                     public void processMessage(Chat chat, Message message) {
+                        SwingUtilities.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                ui.showStatus("Sniper Status: Logged Out");
+                            }
+                        });
                     }
                 }
         );

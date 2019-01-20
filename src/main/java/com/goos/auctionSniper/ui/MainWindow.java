@@ -6,17 +6,15 @@ import java.awt.*;
 
 public class MainWindow extends JFrame {
 
-    private final String sniperStatus = "Sniper Status: Joined";
+    private String sniperStatus = "Sniper Status: Joined";
     private final String SNIPER_STATUS_LABEL_NAME = "Label-SniperStatus";
+    private final JLabel statusLabel = createLabel(sniperStatus);
 
     public MainWindow(){
         JFrame mainWindow = new JFrame("Auction Sniper");
         mainWindow.setName("Auction Sniper Standalone");
         mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         mainWindow.setVisible(true);
-
-        JLabel statusLabel = createLabel(sniperStatus);
-
         mainWindow.add(statusLabel);
         mainWindow.pack();
     }
@@ -26,5 +24,9 @@ public class MainWindow extends JFrame {
         statusLabel.setName(SNIPER_STATUS_LABEL_NAME);
         statusLabel.setBorder(new LineBorder(Color.BLACK));
         return statusLabel;
+    }
+
+    public void showStatus(String status) {
+        statusLabel.setText(status);
     }
 }
