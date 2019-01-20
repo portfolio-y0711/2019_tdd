@@ -52,6 +52,12 @@ public class FakeAuctionServer {
         connection.disconnect();
     }
 
+    public void reportPrice(int price, int increment, String bidder) {
+    }
+
+    public void hasReceivedBid(int bidPrice, String sniperId) {
+    }
+
 
     public class SingleMessageListener implements MessageListener {
         ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
