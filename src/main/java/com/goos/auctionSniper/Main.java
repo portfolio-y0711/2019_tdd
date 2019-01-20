@@ -23,10 +23,14 @@ public class Main {
     public static void main(String... args) throws InvocationTargetException, InterruptedException, XMPPException {
         Main main = new Main();
 
-        XMPPConnection connection = connectTo(args[0],args[1], args[2]);
+        XMPPConnection connection = connectTo(args[0], args[1], args[2]);
 
+        joinAuction(connection, args[3]);
+    }
+
+    public static void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         Chat chat = connection.getChatManager().createChat(
-                "auction-item-54321@f20dd0edf83f/Auction",
+                getUserJID(itemId, connection),
                 new MessageListener() {
                     @Override
                     public void processMessage(Chat chat, Message message) {
@@ -34,6 +38,13 @@ public class Main {
                 }
         );
         chat.sendMessage(new Message());
+    }
+
+    public static String getUserJID(String itemId, XMPPConnection connection) {
+        return String.format("auction-%s@%s/%s",
+                itemId,
+                connection.getServiceName(),
+                AUCTION_RESOURCE);
     }
 
     public static XMPPConnection connectTo(String hostname, String username, String password) throws XMPPException {
