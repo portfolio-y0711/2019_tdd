@@ -38,4 +38,7 @@ public class ApplicationRunner {
             driver.dispose();
         }
     }
+
+    public void hasShownSniperIsBidding() {
+    }
 }
