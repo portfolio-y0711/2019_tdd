@@ -14,11 +14,20 @@ public class AuctionSniperEndToEndTest {
         auction.startSellingItem();
         application.startBiddingIn(auction);
         auction.hasReceivedJoinRequestFromSniper();
+        auction.announceClosed();
+        application.showSniperHasLostAuction();
+    }
+
+    @Test
+    public void sniperMakesAHigherBidButLoses() throws XMPPException, InterruptedException {
+        auction.startSellingItem();
+        application.startBiddingIn(auction);
 
         auction.reportPrice(1000, 98, "other bidder");
         application.hasShownSniperIsBidding();
         auction.hasReceivedBid(1098, "sniper@sanalucet.duckdns.org/Auction");
 
+        auction.hasReceivedJoinRequestFromSniper();
         auction.announceClosed();
         application.showSniperHasLostAuction();
     }
