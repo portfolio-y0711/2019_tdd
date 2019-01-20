@@ -14,6 +14,11 @@ public class AuctionSniperEndToEndTest {
         auction.startSellingItem();
         application.startBiddingIn(auction);
         auction.hasReceivedJoinRequestFromSniper();
+
+        auction.reportPrice(1000, 98, "other bidder");
+        application.hasShownSniperIsBidding();
+        auction.hasReceivedBid(1098, "sniper@sanalucet.duckdns.org/Auction");
+
         auction.announceClosed();
         application.showSniperHasLostAuction();
     }

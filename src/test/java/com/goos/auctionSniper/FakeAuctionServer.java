@@ -52,6 +52,7 @@ public class FakeAuctionServer {
         connection.disconnect();
     }
 
+
     public class SingleMessageListener implements MessageListener {
         ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
 
