@@ -1,5 +1,6 @@
-package com.goos.auctionSniper;
+package com.goos.auctionSniper.e2e;
 
+import com.goos.auctionSniper.Main;
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.JFrameDriver;
 import com.objogate.wl.swing.driver.JLabelDriver;
@@ -12,14 +13,12 @@ public class AuctionSniperDriver extends JFrameDriver {
         super(new GesturePerformer(),
                 JFrameDriver.topLevelFrame(named("Auction Sniper Standalone"), showingOnScreen()),
                 new AWTEventQueueProber(timeoutMillis, 100));
-
     }
 
     public void showSniperStatus(String statusText) {
-        new JLabelDriver(this, named(Main.SNIPER_STATUS_LABEL))
-        .hasText(equalTo(statusText));
-    }
-
-    public void dispose() {
+        new JLabelDriver(
+            this,
+                named(Main.SNIPER_STATUS_LABEL)
+        ).hasText(equalTo(statusText));
     }
 }

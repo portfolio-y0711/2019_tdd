@@ -1,4 +1,4 @@
-package com.goos.auctionSniper;
+package com.goos.auctionSniper.e2e;
 
 import org.jivesoftware.smack.XMPPException;
 import org.junit.jupiter.api.AfterEach;
@@ -10,27 +10,27 @@ public class AuctionSniperEndToEndTest {
     private final ApplicationRunner application = new ApplicationRunner();
 
     @Test
-    public void sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
-        auction.startSellingItem();
-        application.startBiddingIn(auction);
-        auction.hasReceivedJoinRequestFromSniper();
-        auction.announceClosed();
-        application.showSniperHasLostAuction();
-    }
-
-    @Test
     public void sniperMakesAHigherBidButLoses() throws XMPPException, InterruptedException {
         auction.startSellingItem();
         application.startBiddingIn(auction);
+        auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
 
-        auction.reportPrice(1000, 98, "other bidder");
+        auction.reportPrice(1000, 98, "sniper@f20dd0edf83f/Auction");
         application.hasShownSniperIsBidding();
-        auction.hasReceivedBid(1098, "sniper@sanalucet.duckdns.org/Auction");
+        auction.hasReceivedBid(1098, "sniper@f20dd0edf83f/Auction");
 
-        auction.hasReceivedJoinRequestFromSniper();
         auction.announceClosed();
         application.showSniperHasLostAuction();
     }
+
+//    @Test
+//    public void sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
+//        auction.startSellingItem();
+//        application.startBiddingIn(auction);
+//        auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
+//        auction.announceClosed();
+//        application.showSniperHasLostAuction();
+//    }
 
     @AfterEach
     public void stopAuction() {

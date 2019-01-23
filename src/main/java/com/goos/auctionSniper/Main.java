@@ -9,12 +9,15 @@ import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 
-public class Main {
+public class Main implements AuctionEventListener {
     public static final String SNIPER_STATUS_LABEL = "Label-SniperStatus";
-    private static final String AUCTION_RESOURCE = "Auction";
+    public static final String AUCTION_RESOURCE = "Auction";
     private static MainWindow ui;
+    private Chat notToBeGCd;
 
     public Main() throws InvocationTargetException, InterruptedException {
         startUserInterface();
@@ -25,25 +28,29 @@ public class Main {
 
         XMPPConnection connection = connectTo(args[0], args[1], args[2]);
 
-        joinAuction(connection, args[3]);
+        main.joinAuction(connection, args[3]);
     }
 
-    public static void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
+    public void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
+        disconectWhenUICloses(connection);
         Chat chat = connection.getChatManager().createChat(
-                getUserJID(itemId, connection),
-                new MessageListener() {
-                    @Override
-                    public void processMessage(Chat chat, Message message) {
-                        SwingUtilities.invokeLater(new Runnable() {
-                            @Override
-                            public void run() {
-                                ui.showStatus("Sniper Status: Logged Out");
-                            }
-                        });
-                    }
-                }
+                getUserJID(itemId, connection), new AuctionMessageTranslator(this)
+
         );
-        chat.sendMessage(new Message());
+        this.notToBeGCd = chat;
+        chat.sendMessage("SOLVersion: 1.1; Command: JOIN;");
+    }
+
+    private void disconectWhenUICloses(final XMPPConnection connection) {
+        ui.addWindowListener(
+            new WindowAdapter(){
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    connection.disconnect();
+                }
+            }
+        );
+
     }
 
     public static String getUserJID(String itemId, XMPPConnection connection) {
@@ -67,5 +74,15 @@ public class Main {
                 ui = new MainWindow();
             }
         });
+    }
+
+    @Override
+    public void auctionClosed() {
+
+    }
+
+    @Override
+    public void currentPrice(int price, int increment) {
+
     }
 }

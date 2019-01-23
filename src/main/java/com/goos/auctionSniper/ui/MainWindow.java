@@ -5,9 +5,9 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 
 public class MainWindow extends JFrame {
+    public final String SNIPER_STATUS_LABEL_NAME = "Label-SniperStatus";
+    public final String sniperStatus = "Sniper Status: Joined";
 
-    private String sniperStatus = "Sniper Status: Joined";
-    private final String SNIPER_STATUS_LABEL_NAME = "Label-SniperStatus";
     private final JLabel statusLabel = createLabel(sniperStatus);
 
     public MainWindow(){

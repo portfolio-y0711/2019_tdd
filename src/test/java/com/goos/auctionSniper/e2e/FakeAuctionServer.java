@@ -1,5 +1,6 @@
-package com.goos.auctionSniper;
+package com.goos.auctionSniper.e2e;
 
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
@@ -7,8 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 public class FakeAuctionServer {
     private final String itemId;
@@ -34,30 +34,49 @@ public class FakeAuctionServer {
                     }
                 }
         );
+        System.out.println(currentChat);
     }
 
     public String getItemId() {
         return itemId;
     }
 
-    public void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListner.receivesAMessage();
-    }
-
     public void announceClosed() throws XMPPException {
-        currentChat.sendMessage(new Message());
+//        currentChat.sendMessage(new Message());
+        currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
     }
 
     public void stop() {
         connection.disconnect();
     }
 
-    public void reportPrice(int price, int increment, String bidder) {
+    public void reportPrice(int price, int increment, String bidder) throws XMPPException {
+        currentChat.sendMessage(
+            String.format(
+                "SOLVersion: 1.1; Event: PRICE; "
+                + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+                price, increment, bidder
+            )
+        );
     }
 
-    public void hasReceivedBid(int bidPrice, String sniperId) {
+    public void hasReceivedJoinRequestFrom(String sniperId) throws InterruptedException {
+        messageListner.receivesAMessage(
+            equalTo("SOLVersion: 1.1; Command: JOIN;")
+        );
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
     }
 
+    public void hasReceivedBid(int bidPrice, String sniperId) throws InterruptedException {
+        messageListner.receivesAMessage(
+            equalTo(
+                String.format(
+                    "SOLVersion: 1.1; Command: BID; Price; %d;", bidPrice
+                )
+            )
+        );
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
+    }
 
     public class SingleMessageListener implements MessageListener {
         ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
@@ -67,8 +86,10 @@ public class FakeAuctionServer {
             messages.add(message);
         }
 
-        public void receivesAMessage() throws InterruptedException {
-            assertThat("Message", messages.poll(5, SECONDS), is(notNullValue()));
+        public void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException {
+            final Message message = messages.poll(5, SECONDS);
+            assertThat("Message", message, is(notNullValue()));
+            assertThat(message.getBody(), messageMatcher);
         }
     }
 }
