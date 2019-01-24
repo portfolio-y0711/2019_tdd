@@ -1,0 +1,5 @@
+package com.goos.auctionSniper;
+
+public interface Auction {
+    void bid(int amount);
+}

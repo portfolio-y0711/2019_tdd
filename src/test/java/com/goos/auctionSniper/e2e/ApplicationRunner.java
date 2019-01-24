@@ -10,7 +10,7 @@ public class ApplicationRunner {
     public final String SNIPER_ID = "sniper";
     public final String STATUS_JOIN = "Sniper Status: Joined";
     public final String STATUS_BIDDING = "Sniper Status: Bidding";
-    public final String STATUS_LOST = "Sniper Status: Logged Out";
+    public final String STATUS_LOST = "Sniper Status: Lost";
     private AuctionSniperDriver driver;
 
     public void startBiddingIn(FakeAuctionServer auction) {
