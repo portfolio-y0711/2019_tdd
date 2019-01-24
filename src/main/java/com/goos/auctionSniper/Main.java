@@ -3,17 +3,15 @@ package com.goos.auctionSniper;
 import com.goos.auctionSniper.ui.MainWindow;
 
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 
-public class Main implements AuctionEventListener {
+public class Main implements SniperListener {
     public static final String SNIPER_STATUS_LABEL = "Label-SniperStatus";
     public static final String AUCTION_RESOURCE = "Auction";
     private static MainWindow ui;
@@ -34,7 +32,8 @@ public class Main implements AuctionEventListener {
     public void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
         disconectWhenUICloses(connection);
         Chat chat = connection.getChatManager().createChat(
-                getUserJID(itemId, connection), new AuctionMessageTranslator(this)
+                getUserJID(itemId, connection),
+                new AuctionMessageTranslator(new AuctionSniper(this))
 
         );
         this.notToBeGCd = chat;
@@ -77,12 +76,12 @@ public class Main implements AuctionEventListener {
     }
 
     @Override
-    public void auctionClosed() {
-
-    }
-
-    @Override
-    public void currentPrice(int price, int increment) {
-
+    public void sniperLost() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ui.showStatus("Sniper Status: Lost");
+            }
+        });
     }
 }
