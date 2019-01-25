@@ -11,7 +11,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.lang.reflect.InvocationTargetException;
 
-public class Main implements SniperListener {
+public class Main {
     public static final String SNIPER_STATUS_LABEL = "Label-SniperStatus";
     public static final String AUCTION_RESOURCE = "Auction";
     private static MainWindow ui;
@@ -37,18 +37,12 @@ public class Main implements SniperListener {
 
         this.notToBeGCd = chat;
 
-        Auction auction = new Auction () {
-            public void bid(int amount) {
-                try {
-                    chat.sendMessage(String.format("SOLVersion: 1.1; Command: BID; Price; %d;", amount));
-                } catch (XMPPException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
+        Auction auction = new XMPPAuction(chat);
 
-        chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, this)));
-        chat.sendMessage("SOLVersion: 1.1; Command: JOIN;");
+        chat.addMessageListener(
+                new AuctionMessageTranslator(
+                        new AuctionSniper(auction, new SniperStateDisplayer())));
+        auction.join();
     }
 
     private void disconectWhenUICloses(final XMPPConnection connection) {
@@ -86,23 +80,27 @@ public class Main implements SniperListener {
         });
     }
 
-    @Override
-    public void sniperLost() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ui.showStatus("Sniper Status: Lost");
-            }
-        });
-    }
+    public class SniperStateDisplayer implements SniperListener {
+        public void sniperLost() {
+            showStatus("Sniper Status: Lost");
+        }
 
-    @Override
-    public void sniperBidding() {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                ui.showStatus("Sniper Status: Bidding");
-            }
-        });
+        public void sniperBidding() {
+            showStatus("Sniper Status: Bidding");
+        }
+
+        public void sniperWinning() {
+            showStatus("Sniper Status: Winning");
+        }
+
+        private void showStatus(final String status) {
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    ui.showStatus(status);
+                }
+            });
+        }
     }
 }
+

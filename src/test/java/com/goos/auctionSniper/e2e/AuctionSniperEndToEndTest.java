@@ -23,14 +23,14 @@ public class AuctionSniperEndToEndTest {
         application.showSniperHasLostAuction();
     }
 
-//    @Test
-//    public void sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
-//        auction.startSellingItem();
-//        application.startBiddingIn(auction);
-//        auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
-//        auction.announceClosed();
-//        application.showSniperHasLostAuction();
-//    }
+    @Test
+    public void sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
+        auction.startSellingItem();
+        application.startBiddingIn(auction);
+        auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
+        auction.announceClosed();
+        application.showSniperHasLostAuction();
+    }
 
     @AfterEach
     public void stopAuction() {
