@@ -10,7 +10,9 @@ public class ApplicationRunner {
     public final String SNIPER_ID = "sniper";
     public final String STATUS_JOIN = "Sniper Status: Joined";
     public final String STATUS_BIDDING = "Sniper Status: Bidding";
+    public final String STATUS_WINNING = "Sniper Status: Winning";
     public final String STATUS_LOST = "Sniper Status: Lost";
+    public final String STATUS_WON = "Sniper Status: Won";
     private AuctionSniperDriver driver;
 
     public void startBiddingIn(FakeAuctionServer auction) {
@@ -39,6 +41,10 @@ public class ApplicationRunner {
     public void hasShownSniperIsBidding() {
         driver.showSniperStatus(STATUS_BIDDING);
     }
+
+    public void hasShownSniperIsWinning() { driver.showSniperStatus(STATUS_WINNING); }
+
+    public void showSniperHasWonAuction() { driver.showSniperStatus(STATUS_WON); }
 
     public void stop() {
         if (driver != null) {

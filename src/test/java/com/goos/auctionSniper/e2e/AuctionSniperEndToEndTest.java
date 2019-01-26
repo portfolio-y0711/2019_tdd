@@ -9,8 +9,8 @@ public class AuctionSniperEndToEndTest {
 
     private final ApplicationRunner application = new ApplicationRunner();
 
-    @Test
-    public void sniperMakesAHigherBidButLoses() throws XMPPException, InterruptedException {
+    @Test public void
+    sniperMakesAHigherBidButLoses() throws XMPPException, InterruptedException {
         auction.startSellingItem();
         application.startBiddingIn(auction);
         auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
@@ -23,13 +23,32 @@ public class AuctionSniperEndToEndTest {
         application.showSniperHasLostAuction();
     }
 
-    @Test
-    public void sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
+    @Test public void
+    sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
         auction.startSellingItem();
         application.startBiddingIn(auction);
         auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
         auction.announceClosed();
         application.showSniperHasLostAuction();
+    }
+
+    @Test public void
+    sniperWinsAnAuctionByBiddngHigher() throws Exception {
+        auction.startSellingItem();
+
+        application.startBiddingIn(auction);
+        auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
+
+        auction.reportPrice(1000, 98, "other bidder");
+        application.hasShownSniperIsBidding();
+
+        auction.hasReceivedBid(1098, "sniper@f20dd0edf83f/Auction");
+
+        auction.reportPrice(1098, 97, "sniper");
+        application.hasShownSniperIsWinning();
+
+        auction.announceClosed();
+        application.showSniperHasWonAuction();
     }
 
     @AfterEach

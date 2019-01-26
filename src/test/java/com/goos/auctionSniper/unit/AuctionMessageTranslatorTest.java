@@ -17,7 +17,7 @@ public class AuctionMessageTranslatorTest {
     public static final Chat UNUSED_CHAT = null;
 
     private final AuctionEventListener listener = Mockito.mock(AuctionEventListener.class);
-    private final AuctionMessageTranslator translator = new AuctionMessageTranslator(listener);
+    private final AuctionMessageTranslator translator = new AuctionMessageTranslator("sniper", listener);
 
     @Test
     public void notifiesAuctionclosedWhenCloseMessageReceived(){
@@ -30,13 +30,24 @@ public class AuctionMessageTranslatorTest {
     }
 
     @Test
-    public void notifiesBidDetailsWhenCurrentPriceMessageReceived() {
+    public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromOtherBidder() {
         Message message = new Message();
         message.setBody(
-            "SOLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: Someone else;"
+                "SOLVersion: 1.1; Event: PRICE; CurrentPrice: 192; Increment: 7; Bidder: Someone else;"
         );
 
         translator.processMessage(UNUSED_CHAT, message);
-        verify(listener, times(1)).currentPrice(192, 7);
+        verify(listener, times(1)).currentPrice(192, 7, AuctionEventListener.PriceSource.FromOtherBidder);
+    }
+
+    @Test
+    public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper() {
+        Message message = new Message();
+        message.setBody(
+                "SOLVersion: 1.1; Event: PRICE; CurrentPrice: 234; Increment: 5; Bidder: " + "sniper" + ";"
+        );
+
+        translator.processMessage(UNUSED_CHAT, message);
+        verify(listener, times(1)).currentPrice(234, 5, AuctionEventListener.PriceSource.FromSniper);
     }
 }
