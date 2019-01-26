@@ -15,7 +15,7 @@ public class AuctionSniperEndToEndTest {
         application.startBiddingIn(auction);
         auction.hasReceivedJoinRequestFrom("sniper@f20dd0edf83f/Auction");
 
-        auction.reportPrice(1000, 98, "sniper@f20dd0edf83f/Auction");
+        auction.reportPrice(1000, 98, "other bidder");
         application.hasShownSniperIsBidding();
         auction.hasReceivedBid(1098, "sniper@f20dd0edf83f/Auction");
 
