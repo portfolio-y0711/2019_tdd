@@ -1,7 +1,6 @@
 package com.goos.auctionSniper.unit;
 
 import com.goos.auctionSniper.Auction;
-import com.goos.auctionSniper.AuctionEventListener;
 import com.goos.auctionSniper.AuctionSniper;
 import com.goos.auctionSniper.SniperListener;
 
@@ -21,7 +20,7 @@ public class AuctionSniperTest {
     private AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
 
     @Test public void
-    reportsLostWhenAuctionCloses() {
+    reportsLostWhenAuctionClosesImmediately() {
         sniper.auctionClosed();
         verify(sniperListener, times(1)).sniperLost();
     }
@@ -40,5 +39,19 @@ public class AuctionSniperTest {
         sniper.currentPrice(123, 45, FromSniper);
         verify(sniperListener, atLeast(1)).sniperWinning();
 
+    }
+
+    @Test public void
+    reportsLostIfAuctionClosesWhenBidding() {
+        sniper.currentPrice(123, 45, FromOtherBidder);
+        sniper.auctionClosed();
+        verify(sniperListener, atLeast(1)).sniperLost();
+    }
+
+    @Test public void
+    reportsWonIfAuctionClosesWhenWinning(){
+        sniper.currentPrice(123, 45, FromSniper);
+        sniper.auctionClosed();
+        verify(sniperListener, atLeast(1)).sniperWon();
     }
 }

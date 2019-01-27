@@ -93,6 +93,11 @@ public class Main {
             showStatus("Sniper Status: Winning");
         }
 
+        @Override
+        public void sniperWon() {
+            showStatus("Sniper Status: Won");
+        }
+
         private void showStatus(final String status) {
             SwingUtilities.invokeLater(new Runnable() {
                 @Override

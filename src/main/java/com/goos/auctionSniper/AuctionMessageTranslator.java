@@ -31,7 +31,7 @@ public class AuctionMessageTranslator implements MessageListener {
             listener.currentPrice(
                     event.currentPrice(),
                     event.increment(),
-                    event.isFrom(sniperId)
+                    event.isFrom("sniper")
             );
         }
     }
