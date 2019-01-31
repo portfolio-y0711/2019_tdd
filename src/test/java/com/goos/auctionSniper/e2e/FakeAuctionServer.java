@@ -11,52 +11,31 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 public class FakeAuctionServer {
+
+    public static final String ITEM_ID_AS_LOGIN = "auction-%s";
+    public static final String AUCTION_RESOURCE = "Auction";
+    public static final String XMPP_HOSTNAME = "antop.org";
+    public static final String AUCTION_PASSWORD = "auction";
+
+    private final SingleMessageListener messageListner = new SingleMessageListener();
+
     private final String itemId;
     private final XMPPConnection connection;
     private Chat currentChat;
 
-    private final SingleMessageListener messageListner = new SingleMessageListener();
 
     public FakeAuctionServer(String itemId) {
         this.itemId = itemId;
-        this.connection = new XMPPConnection("sanalucet.duckdns.org");
+        this.connection = new XMPPConnection(XMPP_HOSTNAME);
     }
 
     public void startSellingItem() throws XMPPException {
         connection.connect();
-        connection.login("auction-item-54321", "auction", "Auction");
-        connection.getChatManager().addChatListener(
-                new ChatManagerListener() {
-                    @Override
-                    public void chatCreated(Chat chat, boolean createdLocally) {
+        connection.login(String.format(ITEM_ID_AS_LOGIN, itemId), AUCTION_PASSWORD, AUCTION_RESOURCE);
+        connection.getChatManager().addChatListener((chat, createdLocally) -> {
                         currentChat = chat;
                         chat.addMessageListener(messageListner);
-                    }
                 }
-        );
-        System.out.println(currentChat);
-    }
-
-    public String getItemId() {
-        return itemId;
-    }
-
-    public void announceClosed() throws XMPPException {
-//        currentChat.sendMessage(new Message());
-        currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
-    }
-
-    public void stop() {
-        connection.disconnect();
-    }
-
-    public void reportPrice(int price, int increment, String bidder) throws XMPPException {
-        currentChat.sendMessage(
-            String.format(
-                "SOLVersion: 1.1; Event: PRICE; "
-                + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
-                price, increment, bidder
-            )
         );
     }
 
@@ -78,7 +57,31 @@ public class FakeAuctionServer {
         assertThat(currentChat.getParticipant(), equalTo(sniperId));
     }
 
+    public void announceClosed() throws XMPPException {
+//        currentChat.sendMessage(new Message());
+        currentChat.sendMessage("SOLVersion: 1.1; Event: CLOSE;");
+    }
+
+    public void stop() {
+        connection.disconnect();
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void reportPrice(int price, int increment, String bidder) throws XMPPException {
+        currentChat.sendMessage(
+                String.format(
+                        "SOLVersion: 1.1; Event: PRICE; "
+                                + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+                        price, increment, bidder
+                )
+        );
+    }
+
     public class SingleMessageListener implements MessageListener {
+
         ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
 
         @Override
