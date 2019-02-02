@@ -1,6 +1,8 @@
 package com.goos.auctionSniper.ui;
 
+import com.goos.auctionSniper.Column;
 import com.goos.auctionSniper.Main;
+import com.goos.auctionSniper.SniperState;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -47,11 +49,18 @@ public class MainWindow extends JFrame {
         snipers.setStatusText(statusText);
     }
 
-    public class SnipersTableModel extends AbstractTableModel {
+    public void sniperStatusChanged(SniperState sniperState, String statusText) {
+        snipers.sniperStatusChanged(sniperState, statusText);
+    }
+
+    public static class SnipersTableModel extends AbstractTableModel {
+
+        private final static SniperState STARTING_UP = new SniperState("", 0, 0);
+        private SniperState sniperState = STARTING_UP;
         private String statusText = STATUS_JOINING;
 
         public int getColumnCount() {
-            return 1;
+            return Column.values().length;
         }
 
         public int getRowCount() {
@@ -59,10 +68,27 @@ public class MainWindow extends JFrame {
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return statusText;
+            switch (Column.at(columnIndex)) {
+                case ITEM_IDENTIFIER:
+                    return sniperState.itemId;
+                case LAST_PRICE:
+                    return sniperState.lastPrice;
+                case LAST_BID:
+                    return sniperState.lastBid;
+                case SNIPER_STATUS:
+                    return statusText;
+                default:
+                    throw new IllegalArgumentException("No Column at " + columnIndex);
+            }
         }
 
         public void setStatusText(String newStatusText) {
+            statusText = newStatusText;
+            fireTableRowsUpdated(0, 0);
+        }
+
+        public void sniperStatusChanged(SniperState newSniperState, String newStatusText) {
+            sniperState = newSniperState;
             statusText = newStatusText;
             fireTableRowsUpdated(0, 0);
         }

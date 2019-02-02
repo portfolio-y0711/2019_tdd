@@ -10,8 +10,10 @@ public class ApplicationRunner {
     public final String XMPP_HOSTNAME = "antop.org";
 
     private AuctionSniperDriver driver;
+    private String itemId;
 
     public void startBiddingIn(final FakeAuctionServer auction) {
+        itemId = auction.getItemId();
         Thread thread = new Thread("Test Application") {
             @Override
             public void run() {
@@ -45,5 +47,17 @@ public class ApplicationRunner {
         if (driver != null) {
             driver.dispose();
         }
+    }
+
+    public void hasShownSniperIsBidding(int lastPrice, int lastBid) {
+        driver.showSniperStatus(itemId, lastPrice, lastBid, MainWindow.STATUS_BIDDING);
+    }
+
+    public void hasShownSniperIsWinning(int winningBid) {
+        driver.showSniperStatus(itemId, winningBid, winningBid, MainWindow.STATUS_WINNING);
+    }
+
+    public void showSniperHasWonAuction(int lastPrice) {
+        driver.showSniperStatus(itemId, lastPrice, lastPrice, MainWindow.STATUS_WON);
     }
 }
