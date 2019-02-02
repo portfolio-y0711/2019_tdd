@@ -1,12 +1,12 @@
 package com.goos.auctionSniper.e2e;
 
 import com.goos.auctionSniper.Main;
-import com.goos.auctionSniper.ui.MainWindow;
 import com.objogate.wl.swing.AWTEventQueueProber;
 import com.objogate.wl.swing.driver.JFrameDriver;
-import com.objogate.wl.swing.driver.JLabelDriver;
+import com.objogate.wl.swing.driver.JTableDriver;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 
+import static com.objogate.wl.swing.matcher.JLabelTextMatcher.withLabelText;
 import static org.hamcrest.Matchers.equalTo;
 
 public class AuctionSniperDriver extends JFrameDriver {
@@ -17,9 +17,6 @@ public class AuctionSniperDriver extends JFrameDriver {
     }
 
     public void showSniperStatus(String statusText) {
-        new JLabelDriver(
-            this,
-                named(MainWindow.SNIPER_JLABEL_NAME)
-        ).hasText(equalTo(statusText));
+        new JTableDriver(this).hasCell(withLabelText(equalTo(statusText)));
     }
 }
