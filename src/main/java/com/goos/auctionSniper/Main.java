@@ -88,13 +88,13 @@ public class Main {
             showStatus(MainWindow.STATUS_LOST);
         }
 
-        public void sniperBidding() {
-            showStatus(MainWindow.STATUS_BIDDING);
-        }
+//        public void sniperBidding() {
+//            showStatus(MainWindow.STATUS_BIDDING);
+//        }
 
-        public void sniperWinning() {
-            showStatus(MainWindow.STATUS_WINNING);
-        }
+//        public void sniperWinning() {
+//            showStatus(MainWindow.STATUS_WINNING);
+//        }
 
         @Override
         public void sniperWon() {
@@ -110,6 +110,11 @@ public class Main {
                 }
             });
 
+        }
+
+        @Override
+        public void sniperStateChanged(SniperSnapshot newSnapshot) {
+            SwingUtilities.invokeLater(() -> ui.sniperStateChanged(newSnapshot));
         }
 
         private void showStatus(final String status) {

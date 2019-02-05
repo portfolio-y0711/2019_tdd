@@ -1,4 +1,4 @@
-package com.goos.auctionSniper;
+package com.goos.auctionSniper.ui;
 
 public enum Column {
     ITEM_IDENTIFIER,

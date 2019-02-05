@@ -1,11 +1,10 @@
 package com.goos.auctionSniper.unit.ui;
 
-import com.goos.auctionSniper.Column;
+import com.goos.auctionSniper.ui.Column;
 import com.goos.auctionSniper.SniperSnapshot;
 import com.goos.auctionSniper.SniperState;
-import com.goos.auctionSniper.ui.MainWindow;
-import com.goos.auctionSniper.ui.MainWindow.SnipersTableModel;
 
+import com.goos.auctionSniper.ui.SnipersTableModel;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -14,6 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import static com.goos.auctionSniper.ui.MainWindow.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -44,7 +44,7 @@ public class SniperTableModelTest {
         assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);
-        assertColumnEquals(Column.SNIPER_STATUS, MainWindow.STATUS_BIDDING);
+        assertColumnEquals(Column.SNIPER_STATUS, STATUS_BIDDING);
         verify(listener).tableChanged(refEq(new TableModelEvent(model, 0)));
     }
 
