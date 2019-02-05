@@ -1,10 +1,7 @@
 package com.goos.auctionSniper.unit;
 
-import com.goos.auctionSniper.Auction;
-import com.goos.auctionSniper.AuctionSniper;
-import com.goos.auctionSniper.SniperListener;
+import com.goos.auctionSniper.*;
 
-import com.goos.auctionSniper.SniperState;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
@@ -18,9 +15,9 @@ import static org.mockito.Mockito.*;
 public class AuctionSniperTest {
     private final Auction auction = mock(Auction.class);
     private SniperListener sniperListener = mock(SniperListener.class);
-    private AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
+    private AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
 
-    protected static final String ITEM_ID = "item-id";
+    protected static final String ITEM_ID = "item-54321";
 
 
     @Test public void
@@ -44,8 +41,10 @@ public class AuctionSniperTest {
         final int increment = 25;
         final int bid = price + increment;
         sniper.currentPrice(price, increment, FromOtherBidder);
+        System.out.println(ITEM_ID);
         verify(auction, times(1)).bid(price + increment);
-        verify(sniperListener, atLeast(1)).sniperBidding(new SniperState(ITEM_ID, price, bid));
+        verify(sniperListener, atLeast(1)).sniperBidding(new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING));
+//        verify(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, bid, SniperState.BIDDING));
     }
 
     @Test public void

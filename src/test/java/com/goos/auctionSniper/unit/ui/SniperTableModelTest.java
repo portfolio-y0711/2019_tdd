@@ -1,6 +1,7 @@
 package com.goos.auctionSniper.unit.ui;
 
 import com.goos.auctionSniper.Column;
+import com.goos.auctionSniper.SniperSnapshot;
 import com.goos.auctionSniper.SniperState;
 import com.goos.auctionSniper.ui.MainWindow;
 import com.goos.auctionSniper.ui.MainWindow.SnipersTableModel;
@@ -39,7 +40,7 @@ public class SniperTableModelTest {
 
     @Test public void
     setsSniperValuesInColumns() {
-        model.sniperStatusChanged(new SniperState("item id", 555, 666), MainWindow.STATUS_BIDDING);
+        model.sniperStatusChanged(new SniperSnapshot("item id", 555, 666, SniperState.BIDDING));
         assertColumnEquals(Column.ITEM_IDENTIFIER, "item id");
         assertColumnEquals(Column.LAST_PRICE, 555);
         assertColumnEquals(Column.LAST_BID, 666);

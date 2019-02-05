@@ -2,10 +2,10 @@ package com.goos.auctionSniper.ui;
 
 import com.goos.auctionSniper.Column;
 import com.goos.auctionSniper.Main;
+import com.goos.auctionSniper.SniperSnapshot;
 import com.goos.auctionSniper.SniperState;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 
@@ -49,15 +49,20 @@ public class MainWindow extends JFrame {
         snipers.setStatusText(statusText);
     }
 
-    public void sniperStatusChanged(SniperState sniperState, String statusText) {
-        snipers.sniperStatusChanged(sniperState, statusText);
+//    public void sniperStatusChanged(SniperState sniperState, String statusText) {
+//        snipers.sniperStatusChanged(sniperState, statusText);
+//    }
+
+    public void sniperStateChanged(SniperSnapshot snapshot) {
+        snipers.sniperStatusChanged(snapshot);
     }
 
     public static class SnipersTableModel extends AbstractTableModel {
 
-        private final static SniperState STARTING_UP = new SniperState("", 0, 0);
-        private SniperState sniperState = STARTING_UP;
+        private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.BIDDING);
+        private SniperSnapshot snapshot = STARTING_UP;
         private String statusText = STATUS_JOINING;
+        private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING};
 
         public int getColumnCount() {
             return Column.values().length;
@@ -70,11 +75,11 @@ public class MainWindow extends JFrame {
         public Object getValueAt(int rowIndex, int columnIndex) {
             switch (Column.at(columnIndex)) {
                 case ITEM_IDENTIFIER:
-                    return sniperState.itemId;
+                    return snapshot.itemId;
                 case LAST_PRICE:
-                    return sniperState.lastPrice;
+                    return snapshot.lastPrice;
                 case LAST_BID:
-                    return sniperState.lastBid;
+                    return snapshot.lastBid;
                 case SNIPER_STATUS:
                     return statusText;
                 default:
@@ -87,9 +92,9 @@ public class MainWindow extends JFrame {
             fireTableRowsUpdated(0, 0);
         }
 
-        public void sniperStatusChanged(SniperState newSniperState, String newStatusText) {
-            sniperState = newSniperState;
-            statusText = newStatusText;
+        public void sniperStatusChanged(SniperSnapshot newSnapshot) {
+            this.snapshot = newSnapshot;
+            this.statusText = STATUS_TEXT[newSnapshot.state.ordinal()];
             fireTableRowsUpdated(0, 0);
         }
     }
