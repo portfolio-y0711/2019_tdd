@@ -3,15 +3,15 @@ package com.goos.auctionSniper;
 import java.util.EventListener;
 
 public interface SniperListener extends EventListener {
-    void sniperLost();
+//    void sniperLost();
 
 //    void sniperBidding();
 
 //    void sniperWinning();
 
-    void sniperWon();
+//    void sniperWon();
 
-    void sniperBidding(SniperSnapshot sniperState);
+//    void sniperBidding(SniperSnapshot sniperState);
 
     void sniperStateChanged(SniperSnapshot sniperSnapshot);
 }

@@ -11,8 +11,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.goos.auctionSniper.AuctionEventListener.PriceSource.*;
-import static com.goos.auctionSniper.SniperState.LOST;
-import static com.goos.auctionSniper.SniperState.WINNING;
+import static com.goos.auctionSniper.SniperState.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.times;
@@ -31,10 +30,10 @@ public class AuctionSniperTest {
     @Test public void
     reportsLostWhenAuctionClosesImmediately() {
         sniper.auctionClosed();
-        verify(sniperListener, times(1)).sniperLost();
+//        verify(sniperListener, times(1)).sniperLost();
 
-//        verify(sniperListener).sniperStateChanged(argument.capture());
-//        assertEquals(SniperState.LOST, argument.getValue().state);
+        verify(sniperListener).sniperStateChanged(argument.capture());
+        assertEquals(SniperState.LOST, argument.getValue().state);
     }
 
 //    @Test public void
@@ -73,10 +72,10 @@ public class AuctionSniperTest {
     reportsLostIfAuctionClosesWhenBidding() {
         sniper.currentPrice(123, 45, FromOtherBidder);
         sniper.auctionClosed();
-        verify(sniperListener, atLeast(1)).sniperLost();
+//        verify(sniperListener, atLeast(1)).sniperLost();
 
         verify(sniperListener, atLeastOnce()).sniperStateChanged(argument.capture());
-        assertEquals(SniperState.BIDDING, argument.getValue().state);
+        assertEquals(LOST, argument.getValue().state);
 
     }
 
@@ -84,10 +83,10 @@ public class AuctionSniperTest {
     reportsWonIfAuctionClosesWhenWinning(){
         sniper.currentPrice(123, 45, FromSniper);
         sniper.auctionClosed();
-        verify(sniperListener, atLeast(1)).sniperWon();
+//        verify(sniperListener, atLeast(1)).sniperWon();
 
         verify(sniperListener, atLeastOnce()).sniperStateChanged(argument.capture());
-        assertEquals(WINNING, argument.getValue().state);
+        assertEquals(WON, argument.getValue().state);
 
     }
 
