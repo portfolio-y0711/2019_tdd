@@ -31,7 +31,7 @@ public class SnipersTableModel extends AbstractTableModel {
             case LAST_BID:
                 return snapshot.lastBid;
             case SNIPER_STATUS:
-                return statusText;
+                return textFor(snapshot.state);
             default:
                 throw new IllegalArgumentException("No Column at " + columnIndex);
         }
@@ -44,7 +44,10 @@ public class SnipersTableModel extends AbstractTableModel {
 
     public void sniperStatusChanged(SniperSnapshot newSnapshot) {
         this.snapshot = newSnapshot;
-        this.statusText = STATUS_TEXT[newSnapshot.state.ordinal()];
         fireTableRowsUpdated(0, 0);
+    }
+
+    public static String textFor(SniperState state) {
+        return STATUS_TEXT[state.ordinal()];
     }
 }
