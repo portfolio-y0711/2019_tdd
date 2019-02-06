@@ -9,10 +9,10 @@ import static com.goos.auctionSniper.ui.MainWindow.*;
 
 public class SnipersTableModel extends AbstractTableModel {
 
-    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.BIDDING);
+    private final static SniperSnapshot STARTING_UP = new SniperSnapshot("", 0, 0, SniperState.JOINING);
     private SniperSnapshot snapshot = STARTING_UP;
     private String statusText = STATUS_JOINING;
-    private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING, STATUS_WINNING, STATUS_WON, STATUS_LOST};
+    private static String[] STATUS_TEXT = {STATUS_JOINING, STATUS_BIDDING, STATUS_WINNING, STATUS_LOST, STATUS_WON };
 
     public int getColumnCount() {
         return Column.values().length;
