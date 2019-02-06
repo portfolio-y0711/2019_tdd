@@ -2,6 +2,7 @@ package com.goos.auctionSniper;
 
 import com.goos.auctionSniper.ui.MainWindow;
 
+import com.goos.auctionSniper.ui.SnipersTableModel;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -23,6 +24,7 @@ public class Main {
 
     public static final String SNIPER_WINFRAME_NAME = "TOP_WINFRAME";
 
+    private final SnipersTableModel snipers = new SnipersTableModel();
     private MainWindow ui;
     private Chat notToBeGCd;
 
@@ -50,7 +52,7 @@ public class Main {
         chat.addMessageListener(
                 new AuctionMessageTranslator(
                         connection.getUser(),
-                        new AuctionSniper(itemId, auction, new SniperStateDisplayer())));
+                        new AuctionSniper(itemId, auction, new SniperStateDisplayer(snipers))));
         auction.join();
     }
 
@@ -79,11 +81,17 @@ public class Main {
 
     public void startUserInterface() throws Exception {
         SwingUtilities.invokeAndWait(
-                ()-> ui = new MainWindow()
+                () -> ui = new MainWindow(snipers)
         );
     }
 
     public class SniperStateDisplayer implements SniperListener {
+
+        private final SnipersTableModel snipers;
+
+        public SniperStateDisplayer(SnipersTableModel snipers) {
+            this.snipers = snipers;
+        }
 
         @Override
         public void sniperStateChanged(SniperSnapshot newSnapshot) {

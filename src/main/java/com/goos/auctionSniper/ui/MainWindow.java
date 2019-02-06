@@ -19,11 +19,13 @@ public class MainWindow extends JFrame {
     public static final String STATUS_WON = "Won";
 
     private final JLabel statusLabel = createLabel(STATUS_JOINING);
-    private final SnipersTableModel snipers = new SnipersTableModel();
+    private final SnipersTableModel snipers;
 
-    public MainWindow(){
+    public MainWindow(SnipersTableModel snipers){
         super("Auction Sniper");
         setName(Main.SNIPER_WINFRAME_NAME);
+
+        this.snipers = snipers;
 
         fillContentPane(makeSnipersTable());
         pack();
