@@ -36,6 +36,11 @@ public class SnipersTableModel extends AbstractTableModel {
         fireTableRowsUpdated(0, 0);
     }
 
+    @Override
+    public String getColumnName(int column) {
+        return Column.at(column).name;
+    }
+
     public static String textFor(SniperState state) {
         return STATUS_TEXT[state.ordinal()];
     }

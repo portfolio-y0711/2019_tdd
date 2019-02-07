@@ -28,6 +28,8 @@ public class ApplicationRunner {
         thread.start();
 
         driver = new AuctionSniperDriver(1000);
+        driver.hasTitle("Auction Sniper");
+        driver.hasColumnTitles();
         driver.showSniperStatus(MainWindow.STATUS_JOINING);
     }
 
