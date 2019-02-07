@@ -14,48 +14,76 @@ public class AuctionSniperEndToEndTest {
 
     private final ApplicationRunner application = new ApplicationRunner();
     private final FakeAuctionServer auction = new FakeAuctionServer("item-54321");
+    private final FakeAuctionServer auction2 = new FakeAuctionServer("item-65432");
 
     @Test public void
-    sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
+    sniperBidsForMultipleItems() throws Exception {
         auction.startSellingItem();
-        application.startBiddingIn(auction);
-        auction.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
-        auction.announceClosed();
-        application.showSniperHasLostAuction();
-    }
+        auction2.startSellingItem();
 
-    @Test public void
-    sniperMakesAHigherBidButLoses() throws XMPPException, InterruptedException {
-        auction.startSellingItem();
-        application.startBiddingIn(auction);
+        application.startBiddingIn(auction, auction2);
         auction.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
+        auction2.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
 
         auction.reportPrice(1000, 98, "other bidder");
-        application.hasShownSniperIsBidding();
         auction.hasReceivedBid(1098, "sniper@antop.org/Auction");
 
-        auction.announceClosed();
-        application.showSniperHasLostAuction();
-    }
+        auction2.reportPrice(500, 21, "other bidder");
+        auction2.hasReceivedBid(521, "sniper@antop.org/Auction");
 
-    @Test public void
-    sniperWinsAnAuctionByBiddngHigher() throws Exception {
-        auction.startSellingItem();
+        auction.reportPrice(1098, 97, "sniper@antop.org/Auction");
+        auction2.reportPrice(521, 22, "sniper@antop.org/Auction");
 
-        application.startBiddingIn(auction);
-        auction.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
-
-        auction.reportPrice(1000, 98, "other bidder");
-        application.hasShownSniperIsBidding(1000, 1098);
-
-        auction.hasReceivedBid(1098, "sniper@antop.org/Auction");
-
-        auction.reportPrice(1098, 97, "sniper");
-        application.hasShownSniperIsWinning(1098);
+        application.hasShownSniperIsWinning(auction, 1098);
+        application.hasShownSniperIsWinning(auction2, 521);
 
         auction.announceClosed();
-        application.showSniperHasWonAuction(1098);
+        auction2.announceClosed();
     }
+
+
+
+//    @Test public void
+//    sniperJoinsAuctionUntilAuctionCloses() throws XMPPException, InterruptedException {
+//        auction.startSellingItem();
+//        application.startBiddingIn(auction);
+//        auction.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
+//        auction.announceClosed();
+//        application.showSniperHasLostAuction();
+//    }
+//
+//    @Test public void
+//    sniperMakesAHigherBidButLoses() throws XMPPException, InterruptedException {
+//        auction.startSellingItem();
+//        application.startBiddingIn(auction);
+//        auction.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
+//
+//        auction.reportPrice(1000, 98, "other bidder");
+//        application.hasShownSniperIsBidding();
+//        auction.hasReceivedBid(1098, "sniper@antop.org/Auction");
+//
+//        auction.announceClosed();
+//        application.showSniperHasLostAuction();
+//    }
+//
+//    @Test public void
+//    sniperWinsAnAuctionByBiddngHigher() throws Exception {
+//        auction.startSellingItem();
+//
+//        application.startBiddingIn(auction);
+//        auction.hasReceivedJoinRequestFrom("sniper@antop.org/Auction");
+//
+//        auction.reportPrice(1000, 98, "other bidder");
+//        application.hasShownSniperIsBidding(1000, 1098);
+//
+//        auction.hasReceivedBid(1098, "sniper@antop.org/Auction");
+//
+//        auction.reportPrice(1098, 97, "sniper");
+//        application.hasShownSniperIsWinning(1098);
+//
+//        auction.announceClosed();
+//        application.showSniperHasWonAuction(1098);
+//    }
 
     @AfterEach
     public void stopAuction() {
